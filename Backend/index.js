@@ -11,6 +11,10 @@ const app = express()
 
 const port = 3000 //defining the port on which your Express server will listen for incoming requests.
 
+app.use(express.json());
+//  It is a middleware that helps us in fetching the dat from the request send by the client.
+
+
 
 // app.get('/', (req, res) => {
 //   res.send('Hello World!')

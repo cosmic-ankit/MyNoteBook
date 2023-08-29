@@ -2,14 +2,17 @@
 
 const express = require('express');
 const router= express.Router();
+const User = require('../Models/User');
 // express.Router() is a built-in middleware function in Express that allows you to create modular, mountable route handlers
 
-router.get('/',(req, res) =>{
-   obj = {
-        a:"thos",
-        number:32,
-    }
-    res.json(obj);
+router.post('/',(req, res) =>{
+   
+    console.log(req.body); 
+    //  To extract the data from the body of the request send by the user we use req.body, and to use req.body we have to export an express middleware called express.json that we will do in index.json
+
+    console.log(res.send(req.body));
+    const user = User(req.body);
+    user.save();
 
 })
 

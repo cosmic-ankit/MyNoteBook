@@ -1,4 +1,7 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
+
+
 
 
 // Creating the schema for user here

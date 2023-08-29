@@ -1,6 +1,6 @@
 const mongoose = require('mongoose'); // Importing mongoose
 
-const mongoURI = "mongodb://localhost:27017/"  // Its a variable that holds the value of mongodb string
+const mongoURI = "mongodb://127.0.0.1:27017/MyNoteBook"  // Its a variable that holds the value of mongodb string
 
 const connectToMongo = () => {
     mongoose.connect(mongoURI, {
