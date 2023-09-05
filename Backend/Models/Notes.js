@@ -8,6 +8,7 @@
 
 
 const mongoose = require('mongoose'); // Importing the mongoose here
+const { Schema } = mongoose;
 
 const NotesSchema = new Schema({
     title : {

@@ -28,8 +28,14 @@ const UserSchema = new Schema({
 
   });
 
-  module.exports = mongoose.model('User', UserSchema)
-  // To export the model         (Name of model, Name of schema)
+  const User = mongoose.model('user', UserSchema);
+  User.createIndexes();
+  module.exports = User;
+
+//   module.exports = mongoose.model('User', UserSchema)
+//   // To export the model         (Name of model, Name of schema)
+
+
 
   
   
