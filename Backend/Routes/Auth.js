@@ -13,7 +13,7 @@ router.post('/',[
     body('name', 'Enter a valid name').isLength({ min: 3 }),
 body('email', 'Enter a valid Email').isEmail(),
     body('password', 'Password must be atleast 8 characters').isLength({ min: 8 }),
-],(req, res) =>{
+], async (req, res) =>{
    
     // console.log(req.body); 
     // //  To extract the data from the body of the request send by the user we use req.body, and to use req.body we have to export an express middleware called express.json that we will do in index.json
@@ -22,20 +22,38 @@ body('email', 'Enter a valid Email').isEmail(),
     // const user = User(req.body);
     // user.save();
 
+
+
     const errors = validationResult(req); // To check if there is an error and displaying the error message
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+
+    // Checking if the user with same email already exists
+
+    try {
+    let user = await User.findOne({ email: req.body.email });
+    if(user) {
+     return res.status(200).json({ error: "A user with the same email already exists"})
+    //  If user will exist then it will return the error and code will breakdown over here
+    }
     // Creating the user
-    User.create({
+   user = await User.create({
         name: req.body.name,
         password: req.body.password,
         email: req.body.email,
-      }).then(user => res.json(user))
-      .catch(err=> {console.log(err)
-        res.json({error: 'Please enter a unique value for email', message: err.message})})
+        
+      }
+      
+      )
+
+      console.log(res.send(req.body));
     // Adding this try and error for if the name of email becomes same
-    
+    }
+    catch(error) {
+      console.error(error.message);
+      res.status(500).send("Some Error occured");
+    }
     
 },);
 

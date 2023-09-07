@@ -29,7 +29,10 @@ const UserSchema = new Schema({
   });
 
   const User = mongoose.model('user', UserSchema);
-  User.createIndexes();
+
+
+// User.createIndexes(); // Creating indexes on the basis of email because we have done unique = true
+
   module.exports = User;
 
 //   module.exports = mongoose.model('User', UserSchema)
