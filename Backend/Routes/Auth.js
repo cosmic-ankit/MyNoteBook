@@ -8,13 +8,15 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 
+const JWT_secret = "#23!23%688`0";
+
 
 
 // Importing the validation here. Here we are doing the destructuring
 
 // express.Router() is a built-in middleware function in Express that allows you to create modular, mountable route handlers
 
-router.post('/',[
+router.post('/createuser',[
     // Here in this array we can add the validation
     body('name', 'Enter a valid name').isLength({ min: 3 }),
 body('email', 'Enter a valid Email').isEmail(),
@@ -66,7 +68,7 @@ body('email', 'Enter a valid Email').isEmail(),
       let AuthData = await user.id; // Using id in data as it is unique for every user and we can easily search for users throygh there IDs
 
 
-      const JWT_secret = "#23!23%688`0";
+      
       var Authtoken =  jwt.sign(AuthData, JWT_secret);
       // jwt.sign is a function that takes data and a signature and create a token, JWT_secret creates a unique signature and store it.
 
@@ -81,7 +83,75 @@ body('email', 'Enter a valid Email').isEmail(),
     
 },);
 
+
+
+
+
+// Creating another endpoint for login
+
+router.post('/login',[
+  // Here in this array we can add the validation
+
+body('email', 'Enter a valid Email').isEmail(), 
+body('password', 'Password should not be blank').exists(), // To check if passord field is not empty
+], async (req, res) =>{
+
+  const errors = validationResult(req); // To check if there is an error and displaying the error message
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  
+  // Checking if the user with same credentials exists
+  
+  try {
+
+    const {email, password} = req.body; // Using destructuring to extract email and password fron the body
+
+  let user = await User.findOne({ email });
+
+  if(!user) {
+
+   return res.status(400).json({ error: "Please enter correct credentials" });
+  //  If user will exist then it will return the error and code will breakdown over here
+  }
+
+  else
+   {
+let comparePasswords = await bcrypt.compare(password, user.password);
+
+    if(comparePasswords)
+    {
+      let AuthData = await user.id; // Using id in data as it is unique for every user and we can easily search for users throygh there IDs
+
+
+      
+      var Authtoken =  jwt.sign(AuthData, JWT_secret);
+      // jwt.sign is a function that takes data and a signature and create a token, JWT_secret creates a unique signature and store it.
+
+
+      console.log(res.send({"Token": Authtoken}));
+
+
+
+    }
+    else {
+      return res.status(400).json({ error: "Please enter correct credentials" });
+
+    }
+  }
+}
+
+catch(error) {
+  console.error(error.message);
+  res.status(500).send("Error : Internal Server Failure");
+}
+
+},);
+
+
 module.exports = router;
+
 
 // router.get() is a method provided by an instance of express.Router() to define a route that handles HTTP GET requests for a specific URL path. This method is used to define the behavior of your server when a client sends a GET request to the specified path.
 
