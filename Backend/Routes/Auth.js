@@ -4,6 +4,12 @@ const express = require('express');
 const router= express.Router();
 const User = require('../Models/User');
 const { body, validationResult } = require('express-validator');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
+
+
+
 // Importing the validation here. Here we are doing the destructuring
 
 // express.Router() is a built-in middleware function in Express that allows you to create modular, mountable route handlers
@@ -38,16 +44,34 @@ body('email', 'Enter a valid Email').isEmail(),
     //  If user will exist then it will return the error and code will breakdown over here
     }
     // Creating the user
+
+
+    // Storing Password in Hash and creating Salt
+    let salt =  await bcrypt.genSaltSync(10); //Creating salt here using bycrypt function
+    let secPass =  await bcrypt.hashSync(req.body.password, salt); //Creating hash here
+
+    
+
    user = await User.create({
         name: req.body.name,
-        password: req.body.password,
+        password: secPass,
         email: req.body.email,
         
       }
       
       )
 
-      console.log(res.send(req.body));
+      // Now creating token to send tokens instead of req.body
+
+      let AuthData = await user.id; // Using id in data as it is unique for every user and we can easily search for users throygh there IDs
+
+
+      const JWT_secret = "#23!23%688`0";
+      var Authtoken =  jwt.sign(AuthData, JWT_secret);
+      // jwt.sign is a function that takes data and a signature and create a token, JWT_secret creates a unique signature and store it.
+
+
+      console.log(res.send({"Token": Authtoken}));
     // Adding this try and error for if the name of email becomes same
     }
     catch(error) {
