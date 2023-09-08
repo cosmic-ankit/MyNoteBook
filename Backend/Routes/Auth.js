@@ -92,7 +92,7 @@ body('email', 'Enter a valid Email').isEmail(),
 router.post('/login',[
   // Here in this array we can add the validation
 
-body('email', 'Enter a valid Email').isEmail(), 
+body('email', 'Enter correct credentials').isEmail(), 
 body('password', 'Password should not be blank').exists(), // To check if passord field is not empty
 ], async (req, res) =>{
 
